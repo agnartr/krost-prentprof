@@ -3,21 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kröst – prentpróf</title>
+<title>Kröst – prentpróf / print test</title>
 <!--
   Prentpróf fyrir Kröst: prentar beint á Star Micronics mPOP (USB) úr Chrome á Android
   með WebUSB og einföldum Star-skipunum (StarPRNT). Engin önnur forrit eða söfn þarf.
   Síðan verður að vera opnuð yfir HTTPS (WebUSB krefst þess). Engin gögn fara frá tækinu.
+  Tungumál: ?lang=en eða ?lang=is; annars eftir tungumáli vafrans.
 -->
 <style>
-  :root { --bg:#f6f5f2; --ink:#1b1b1b; --muted:#666; --line:#d9d6cf; --ok:#1f7a3a; --err:#b3261e; --accent:#d9622b; }
+  :root { --bg:#f6f5f2; --ink:#1b1b1b; --muted:#666; --line:#d9d6cf; --ok:#1f7a3a; --err:#b3261e; }
   * { box-sizing: border-box; }
   body { margin:0; font: 18px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--ink); }
-  main { max-width: 860px; margin: 0 auto; padding: 24px 20px 48px; }
-  h1 { font-size: 28px; margin: 0 0 4px; }
+  main { max-width: 860px; margin: 0 auto; padding: 20px 20px 48px; }
+  h1 { font-size: 28px; margin: 8px 0 4px; }
   h2 { font-size: 20px; margin: 28px 0 10px; }
   p { margin: 6px 0 12px; }
   .muted { color: var(--muted); }
+  .lang { text-align: right; font-size: 16px; }
+  .lang a { color: var(--ink); margin-left: 12px; }
+  .lang a.on { font-weight: 700; text-decoration: none; }
   .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
   button { font: inherit; padding: 16px 14px; border-radius: 10px; border: 1px solid var(--line); background:#fff; color:var(--ink); text-align:left; cursor:pointer; min-height: 72px; }
   button strong { display:block; font-size: 18px; }
@@ -28,7 +32,7 @@
   #status, .notice { padding: 12px 14px; border-radius: 10px; background:#fff; border:1px solid var(--line); margin: 12px 0; }
   #status.ok { border-color: var(--ok); color: var(--ok); }
   #status.err, .notice.err { border-color: var(--err); color: var(--err); }
-  ol { padding-left: 22px; } li { margin: 4px 0; }
+  ol { padding-left: 22px; } li { margin: 6px 0; }
   #log { background:#111; color:#e8e8e8; font: 14px/1.4 ui-monospace, Menlo, Consolas, monospace; padding: 12px; border-radius: 10px; min-height: 140px; white-space: pre-wrap; overflow-wrap:anywhere; }
   .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
   label { font-size: 16px; }
@@ -37,71 +41,170 @@
 </head>
 <body>
 <main>
-  <h1>Prentpróf fyrir Kröst</h1>
-  <p class="muted">Prófar hvort Chrome á spjaldtölvunni getur prentað kvittun og eldhúsmiða á mPOP-prentarann og opnað peningaskúffuna.</p>
+  <div class="lang"><a href="?lang=is" id="lnkIs">Íslenska</a><a href="?lang=en" id="lnkEn">English</a></div>
+  <h1 data-t="title"></h1>
+  <p class="muted" data-t="intro"></p>
 
-  <h2>Áður en byrjað er</h2>
+  <h2 data-t="beforeH"></h2>
   <ol>
-    <li>Gerðu prófið utan opnunartíma.</li>
-    <li>Lokaðu Dineout-forritinu alveg (Stillingar → Forrit → Dineout → Þvinga lokun), svo það haldi ekki prentaranum.</li>
-    <li>Hafðu prentarann tengdan spjaldtölvunni með USB-snúrunni og kveikt á honum.</li>
+    <li data-t="before1"></li>
+    <li data-t="before2"></li>
+    <li data-t="before3"></li>
+    <li data-t="before4"></li>
   </ol>
 
   <div id="support"></div>
 
-  <h2>1. Tengjast prentaranum</h2>
+  <h2 data-t="connectH"></h2>
+  <p data-t="connectP"></p>
   <div class="grid">
-    <button class="primary" id="btnConnect"><strong>Tengjast mPOP</strong><span>Velja Star-prentara af lista</span></button>
-    <button id="btnConnectAny"><strong>Velja hvaða USB-tæki sem er</strong><span>Ef prentarinn birtist ekki á fyrri listanum</span></button>
+    <button class="primary" id="btnConnect"><strong data-t="bConnect"></strong><span data-t="bConnectS"></span></button>
+    <button id="btnConnectAny"><strong data-t="bAny"></strong><span data-t="bAnyS"></span></button>
   </div>
-  <div id="status">Ekki tengt.</div>
+  <div id="status"></div>
 
-  <h2>2. Prófa</h2>
+  <h2 data-t="testH"></h2>
+  <p data-t="testP"></p>
   <div class="row" style="margin-bottom:12px">
-    <label for="cp">Stafatafla:</label>
+    <label for="cp" data-t="cpLabel"></label>
     <select id="cp">
       <option value="32" selected>Windows-1252 (n=32)</option>
-      <option value="none">Engin stafataflaskipun</option>
+      <option value="none" data-t="cpNone"></option>
     </select>
   </div>
   <div class="grid">
-    <button id="btnText" disabled><strong>Prufutexti</strong><span>Íslenskir stafir, stórt og feitletrað letur</span></button>
-    <button id="btnReceipt" disabled><strong>Prufukvittun</strong><span>Sama snið og kvittun með VSK og tilvísun í reglugerð</span></button>
-    <button id="btnTicket" disabled><strong>Prufueldhúsmiði</strong><span>Borð, tími og réttir í stóru letri, án verðs</span></button>
-    <button id="btnDrawer" disabled><strong>Opna peningaskúffu</strong><span>Sendir opnunarmerki á skúffuna</span></button>
-    <button id="btnCut" disabled><strong>Skera blað</strong><span>Fæðir og sker</span></button>
-    <button id="btnDisconnect" disabled><strong>Aftengja</strong><span>Sleppir prentaranum</span></button>
+    <button id="btnText" disabled><strong data-t="bText"></strong><span data-t="bTextS"></span></button>
+    <button id="btnReceipt" disabled><strong data-t="bReceipt"></strong><span data-t="bReceiptS"></span></button>
+    <button id="btnTicket" disabled><strong data-t="bTicket"></strong><span data-t="bTicketS"></span></button>
+    <button id="btnDrawer" disabled><strong data-t="bDrawer"></strong><span data-t="bDrawerS"></span></button>
+    <button id="btnCut" disabled><strong data-t="bCut"></strong><span data-t="bCutS"></span></button>
+    <button id="btnDisconnect" disabled><strong data-t="bDisc"></strong><span data-t="bDiscS"></span></button>
   </div>
 
-  <h2>Hvað á að skrá</h2>
-  <p>Taktu mynd af hverjum miða sem prentast og skráðu hvort skúffan opnaðist. Ef eitthvað mistekst skaltu taka skjámynd af skránni hér fyrir neðan.</p>
+  <h2 data-t="recordH"></h2>
+  <ol>
+    <li data-t="record1"></li>
+    <li data-t="record2"></li>
+    <li data-t="record3"></li>
+  </ol>
 
-  <h2>Skrá</h2>
+  <h2 data-t="afterH"></h2>
+  <ol>
+    <li data-t="after1"></li>
+    <li data-t="after2"></li>
+    <li data-t="after3"></li>
+  </ol>
+
+  <h2 data-t="logH"></h2>
   <div id="log"></div>
 </main>
 
 <script>
 (() => {
+  // --- Texti á íslensku og ensku ---
+  const T = {
+    is: {
+      title: 'Prentpróf fyrir Kröst',
+      intro: 'Prófar hvort Chrome á spjaldtölvunni getur prentað kvittun og eldhúsmiða á mPOP-prentarann og opnað peningaskúffuna. Prófið tekur um tíu mínútur.',
+      beforeH: 'Áður en byrjað er',
+      before1: 'Gerðu prófið utan opnunartíma. Á meðan prófað er prentar Dineout ekki.',
+      before2: 'Lokaðu Dineout-forritinu alveg: Stillingar → Forrit → Dineout → Þvinga lokun. Annars heldur Dineout prentaranum.',
+      before3: 'Hafðu prentarann tengdan spjaldtölvunni með USB-snúrunni og kveikt á honum.',
+      before4: 'Opnaðu þessa síðu í Chrome á spjaldtölvunni.',
+      connectH: '1. Tengjast prentaranum',
+      connectP: 'Ýttu á „Tengjast mPOP“ og veldu prentarann af listanum sem Chrome sýnir. Ef Android spyr hvort Chrome megi nota USB-tækið skaltu ýta á „Leyfa“, en ekki haka við að Chrome eigi alltaf að opna tækið.',
+      bConnect: 'Tengjast mPOP', bConnectS: 'Velja Star-prentara af lista',
+      bAny: 'Velja hvaða USB-tæki sem er', bAnyS: 'Ef prentarinn birtist ekki á fyrri listanum',
+      testH: '2. Prófa',
+      testP: 'Ýttu á hnappana einn í einu og bíddu eftir að hver miði prentist.',
+      cpLabel: 'Stafatafla:', cpNone: 'Engin stafataflaskipun',
+      bText: 'Prufutexti', bTextS: 'Íslenskir stafir, stórt og feitletrað letur',
+      bReceipt: 'Prufukvittun', bReceiptS: 'Snið kvittunar með VSK og tilvísun í reglugerð',
+      bTicket: 'Prufueldhúsmiði', bTicketS: 'Borð, tími og réttir í stóru letri, án verðs',
+      bDrawer: 'Opna peningaskúffu', bDrawerS: 'Sendir opnunarmerki á skúffuna',
+      bCut: 'Skera blað', bCutS: 'Fæðir og sker',
+      bDisc: 'Aftengja', bDiscS: 'Sleppir prentaranum',
+      recordH: 'Hvað á að skrá',
+      record1: 'Taktu mynd af hverjum miða sem prentast. Skoðaðu sérstaklega hvort íslensku stafirnir á prufutextanum prentast rétt.',
+      record2: 'Skráðu hvort peningaskúffan opnaðist og hvort blaðið var skorið.',
+      record3: 'Ef íslensku stafirnir prentast rangt skaltu velja „Engin stafataflaskipun“ og prenta prufutextann aftur.',
+      afterH: 'Eftir prófið',
+      after1: 'Ýttu á „Aftengja“ og lokaðu Chrome.',
+      after2: 'Opnaðu Dineout aftur og prentaðu einn miða þar til að staðfesta að Dineout nái sambandi við prentarann.',
+      after3: 'Taktu skjámynd af skránni hér fyrir neðan og sendu hana með myndunum.',
+      logH: 'Skrá',
+      notConnected: 'Ekki tengt.',
+      connected: n => `Tengt: ${n}`,
+      connectFail: (m, busy) => `Tenging mistókst: ${m}.` + (busy ? ' Líklega heldur annað forrit (t.d. Dineout) prentaranum. Lokaðu því alveg og reyndu aftur.' : ''),
+      sendFail: m => `Sending mistókst: ${m}`,
+      unplugged: 'Prentarinn var aftengdur.',
+      noHttps: 'Síðan er ekki opnuð yfir HTTPS. WebUSB virkar aðeins á öruggri slóð.',
+      noUsb: 'Þessi vafri styður ekki WebUSB. Notaðu Chrome á spjaldtölvunni.',
+    },
+    en: {
+      title: 'Kröst print test',
+      intro: 'Checks whether Chrome on the tablet can print a receipt and a kitchen ticket on the mPOP printer and open the cash drawer. The test takes about ten minutes.',
+      beforeH: 'Before you start',
+      before1: 'Run the test outside opening hours. Dineout cannot print while the test is running.',
+      before2: 'Close the Dineout app completely: Settings → Apps → Dineout → Force stop. Otherwise Dineout keeps hold of the printer.',
+      before3: 'Keep the printer connected to the tablet with the USB cable and switched on.',
+      before4: 'Open this page in Chrome on the tablet.',
+      connectH: '1. Connect to the printer',
+      connectP: 'Tap “Connect to mPOP” and choose the printer from the list Chrome shows. If Android asks whether Chrome may use the USB device, tap “Allow”, but do not tick the box that makes Chrome open the device by default.',
+      bConnect: 'Connect to mPOP', bConnectS: 'Choose a Star printer from the list',
+      bAny: 'Choose any USB device', bAnyS: 'If the printer does not appear in the first list',
+      testH: '2. Test',
+      testP: 'Tap the buttons one at a time and wait for each ticket to print.',
+      cpLabel: 'Code page:', cpNone: 'No code page command',
+      bText: 'Test text', bTextS: 'Icelandic letters, large and bold text',
+      bReceipt: 'Test receipt', bReceiptS: 'Receipt layout with VAT and the regulation reference',
+      bTicket: 'Test kitchen ticket', bTicketS: 'Table, time and dishes in large text, no prices',
+      bDrawer: 'Open cash drawer', bDrawerS: 'Sends the open signal to the drawer',
+      bCut: 'Cut paper', bCutS: 'Feeds and cuts',
+      bDisc: 'Disconnect', bDiscS: 'Releases the printer',
+      recordH: 'What to record',
+      record1: 'Take a photo of every ticket that prints. Check in particular whether the Icelandic letters on the test text print correctly.',
+      record2: 'Note whether the cash drawer opened and whether the paper was cut.',
+      record3: 'If the Icelandic letters print wrongly, choose “No code page command” and print the test text again.',
+      afterH: 'After the test',
+      after1: 'Tap “Disconnect” and close Chrome.',
+      after2: 'Open Dineout again and print one ticket there to confirm that Dineout can reach the printer.',
+      after3: 'Take a screenshot of the log below and send it with the photos.',
+      logH: 'Log',
+      notConnected: 'Not connected.',
+      connected: n => `Connected: ${n}`,
+      connectFail: (m, busy) => `Connection failed: ${m}.` + (busy ? ' Another app (for example Dineout) is probably holding the printer. Close it completely and try again.' : ''),
+      sendFail: m => `Sending failed: ${m}`,
+      unplugged: 'The printer was disconnected.',
+      noHttps: 'This page is not open over HTTPS. WebUSB only works on a secure address.',
+      noUsb: 'This browser does not support WebUSB. Use Chrome on the tablet.',
+    },
+  };
+  const qs = new URLSearchParams(location.search).get('lang');
+  const lang = (qs === 'en' || qs === 'is') ? qs : (navigator.language || '').toLowerCase().startsWith('is') ? 'is' : 'en';
+  const L = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-t]').forEach(el => { el.textContent = L[el.dataset.t]; });
+  document.getElementById(lang === 'en' ? 'lnkEn' : 'lnkIs').classList.add('on');
+
   const STAR_VENDOR_ID = 0x0519;
   const COLS = 32; // mPOP: 58 mm pappír, um 32 stafir í línu
   let device = null, epOut = null, ifaceNo = null;
 
   const $ = id => document.getElementById(id);
   const logEl = $('log');
-  const log = (msg) => { const t = new Date().toLocaleTimeString('is-IS'); logEl.textContent += `[${t}] ${msg}\n`; logEl.scrollTop = logEl.scrollHeight; };
+  const log = (msg) => { const d = new Date(); const t = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`; logEl.textContent += `[${t}] ${msg}\n`; logEl.scrollTop = logEl.scrollHeight; };
   const setStatus = (msg, cls) => { const s = $('status'); s.textContent = msg; s.className = cls || ''; };
   const testButtons = ['btnText','btnReceipt','btnTicket','btnDrawer','btnCut','btnDisconnect'];
   const enableTests = on => testButtons.forEach(id => $(id).disabled = !on);
+  setStatus(L.notConnected);
 
   // --- Stuðningur vafrans ---
   const sup = $('support');
-  if (!window.isSecureContext) {
-    sup.innerHTML = '<div class="notice err">Síðan er ekki opnuð yfir HTTPS. WebUSB virkar aðeins á öruggri slóð.</div>';
-  } else if (!('usb' in navigator)) {
-    sup.innerHTML = '<div class="notice err">Þessi vafri styður ekki WebUSB. Notaðu Chrome á spjaldtölvunni.</div>';
-  }
-  log(`Vafri: ${navigator.userAgent}`);
-  log(`Örugg slóð: ${window.isSecureContext ? 'já' : 'nei'} · WebUSB: ${'usb' in navigator ? 'já' : 'nei'}`);
+  if (!window.isSecureContext) sup.innerHTML = `<div class="notice err">${L.noHttps}</div>`;
+  else if (!('usb' in navigator)) sup.innerHTML = `<div class="notice err">${L.noUsb}</div>`;
+  log(`UA: ${navigator.userAgent}`);
+  log(`secure=${window.isSecureContext} webusb=${'usb' in navigator} lang=${lang}`);
 
   // --- Star-skipanir (StarPRNT / Star Line Mode) ---
   const ESC = 0x1B, GS = 0x1D;
@@ -130,12 +233,8 @@
     return out;
   };
 
-  // Hjálparföll fyrir uppsetningu
   const kr = n => n.toLocaleString('de-DE') + ' kr';
-  const pairLine = (left, right, cols = COLS) => {
-    const space = Math.max(1, cols - left.length - right.length);
-    return left + ' '.repeat(space) + right;
-  };
+  const pairLine = (left, right, cols = COLS) => left + ' '.repeat(Math.max(1, cols - left.length - right.length)) + right;
   const rule = (cols = COLS) => '-'.repeat(cols);
   const pad2 = n => String(n).padStart(2, '0');
   const stamp = (d = new Date()) => `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()} kl. ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
@@ -152,44 +251,43 @@
   async function connect(filters) {
     try {
       device = await navigator.usb.requestDevice({ filters });
-      log(`Valið tæki: ${device.manufacturerName || '?'} ${device.productName || '?'} (VID 0x${device.vendorId.toString(16)}, PID 0x${device.productId.toString(16)})`);
+      log(`device: ${device.manufacturerName || '?'} ${device.productName || '?'} (VID 0x${device.vendorId.toString(16)}, PID 0x${device.productId.toString(16)})`);
       await device.open();
       if (device.configuration === null) await device.selectConfiguration(1);
-      // Finna viðmót með bulk-útgangi
       for (const iface of device.configuration.interfaces) {
         for (const alt of iface.alternates) {
           const ep = alt.endpoints.find(e => e.direction === 'out' && e.type === 'bulk');
-          if (ep) { ifaceNo = iface.interfaceNumber; epOut = ep.endpointNumber; log(`Viðmót ${ifaceNo}, flokkur 0x${alt.interfaceClass.toString(16)}, útgangur ${epOut}`); break; }
+          if (ep) { ifaceNo = iface.interfaceNumber; epOut = ep.endpointNumber; log(`interface ${ifaceNo}, class 0x${alt.interfaceClass.toString(16)}, endpoint out ${epOut}`); break; }
         }
         if (epOut !== null) break;
       }
-      if (epOut === null) throw new Error('Fann engan bulk-útgang á tækinu.');
+      if (epOut === null) throw new Error('no bulk OUT endpoint');
       await device.claimInterface(ifaceNo);
-      setStatus(`Tengt: ${device.productName || 'USB-prentari'}`, 'ok');
+      setStatus(L.connected(device.productName || 'USB'), 'ok');
       enableTests(true);
     } catch (e) {
-      const hint = /claim|Unable to claim|busy|access/i.test(e.message) ? ' Líklega heldur annað forrit (t.d. Dineout) prentaranum. Lokaðu því alveg og reyndu aftur.' : '';
-      setStatus(`Tenging mistókst: ${e.message}.${hint}`, 'err');
-      log(`VILLA við tengingu: ${e.name}: ${e.message}`);
+      const busy = /claim|busy|access|in use/i.test(e.message);
+      setStatus(L.connectFail(e.message, busy), 'err');
+      log(`ERROR connect: ${e.name}: ${e.message}`);
       device = null; epOut = null; ifaceNo = null;
     }
   }
 
   async function send(bytes, label) {
-    if (!device) { setStatus('Ekki tengt.', 'err'); return; }
+    if (!device) { setStatus(L.notConnected, 'err'); return; }
     try {
       const r = await device.transferOut(epOut, bytes);
-      log(`${label}: sent ${r.bytesWritten} bæti (${r.status})`);
+      log(`${label}: ${r.bytesWritten} bytes (${r.status})`);
     } catch (e) {
-      log(`VILLA við ${label}: ${e.name}: ${e.message}`);
-      setStatus(`Sending mistókst: ${e.message}`, 'err');
+      log(`ERROR ${label}: ${e.name}: ${e.message}`);
+      setStatus(L.sendFail(e.message), 'err');
     }
   }
 
-  // --- Prófin ---
+  // --- Prófin (prentaður texti er á íslensku, því íslensku stafirnir eru það sem er prófað) ---
   function testText() {
     const d = new Doc();
-    d.raw(CMD.align(1)).raw(CMD.boldOn).raw(CMD.size(1,1)).line('KRÖST').raw(CMD.size(0,0)).raw(CMD.boldOff).line('Prentpróf');
+    d.raw(CMD.align(1)).raw(CMD.boldOn).raw(CMD.size(1,1)).line('KRÖST').raw(CMD.size(0,0)).raw(CMD.boldOff).line('Prentpróf / print test');
     d.raw(CMD.align(0)).line(rule());
     d.line('Íslenskir stafir:');
     d.line('áéíóúýþæðö');
@@ -197,26 +295,25 @@
     d.line('Grillaður þorskhnakki');
     d.line('Steik og rauðvínsglas – 6.990 kr');
     d.line(rule());
-    d.raw(CMD.boldOn).line('Feitletrað').raw(CMD.boldOff);
-    d.raw(CMD.size(1,0)).line('Tvöföld hæð').raw(CMD.size(0,0));
-    d.raw(CMD.size(1,1)).line('Tvöfalt').raw(CMD.size(0,0));
-    d.raw(CMD.align(2)).line('Hægri').raw(CMD.align(0));
-    d.line(`Stafatafla: ${$('cp').selectedOptions[0].text}`);
+    d.raw(CMD.boldOn).line('Feitletrað / bold').raw(CMD.boldOff);
+    d.raw(CMD.size(1,0)).line('Tvöföld hæð / tall').raw(CMD.size(0,0));
+    d.raw(CMD.size(1,1)).line('Tvöfalt / big').raw(CMD.size(0,0));
+    d.raw(CMD.align(2)).line('Hægri / right').raw(CMD.align(0));
+    d.line(`Code page: ${$('cp').value}`);
     d.line(''); d.line(''); d.raw(CMD.cut);
-    return send(d.bytes(), 'Prufutexti');
+    return send(d.bytes(), 'text');
   }
 
   function testReceipt() {
     const items = [['Arancini', 2890], ['Pork Belly', 2890], ['Smoked Salmon', 3490]];
     const total = items.reduce((a, [, p]) => a + p, 0);
     const vat = Math.round(total * 11 / 111);
-    const now = new Date();
     const d = new Doc();
     d.raw(CMD.align(1)).raw(CMD.boldOn).raw(CMD.size(1,1)).line('KRÖST').raw(CMD.size(0,0)).raw(CMD.boldOff);
     d.line('Hlemmur Mathöll, Laugavegi 107');
     d.raw(CMD.align(0)).line(rule());
     d.line(pairLine('Reikningur nr.', 'PRÓF-0001'));
-    d.line(pairLine('Dags.', stamp(now)));
+    d.line(pairLine('Dags.', stamp()));
     d.line(pairLine('Borð', 'Bíper 10'));
     d.line(rule());
     for (const [name, price] of items) d.line(pairLine(`1x ${name}`, kr(price)));
@@ -228,16 +325,15 @@
     d.raw(CMD.align(1)).line('Reikningur þessi á uppruna sinn').line('í rafrænu bókhaldskerfi').line('skv. reglugerð nr. 505/2013.');
     d.line('PRUFA – EKKI GILDUR REIKNINGUR');
     d.line(''); d.line(''); d.raw(CMD.cut);
-    return send(d.bytes(), 'Prufukvittun');
+    return send(d.bytes(), 'receipt');
   }
 
   function testTicket() {
-    const now = new Date();
     const d = new Doc();
     d.raw(CMD.align(1)).raw(CMD.size(1,1)).line('Borðað á staðnum').raw(CMD.size(0,0));
     d.raw(CMD.align(0)).line('Borð');
     d.raw(CMD.boldOn).raw(CMD.size(1,1)).line('Bíper 2').raw(CMD.size(0,0)).raw(CMD.boldOff);
-    d.line(stamp(now));
+    d.line(stamp());
     d.line('');
     d.raw(CMD.size(1,1)).line('1x Steik').raw(CMD.size(0,0)).line('   medium');
     d.raw(CMD.size(1,1)).line('1x Kjúklinga-').line('   salat').raw(CMD.size(0,0)).line('   auka kjúklingur');
@@ -245,7 +341,7 @@
     d.line('');
     d.raw(CMD.align(1)).raw(CMD.size(1,1)).line('Bíper 2').raw(CMD.size(0,0)).line('PRUFA');
     d.line(''); d.line(''); d.raw(CMD.cut);
-    return send(d.bytes(), 'Prufueldhúsmiði');
+    return send(d.bytes(), 'kitchen ticket');
   }
 
   $('btnConnect').onclick = () => connect([{ vendorId: STAR_VENDOR_ID }]);
@@ -253,13 +349,13 @@
   $('btnText').onclick = testText;
   $('btnReceipt').onclick = testReceipt;
   $('btnTicket').onclick = testTicket;
-  $('btnDrawer').onclick = () => send(new Uint8Array([...CMD.init, ...CMD.drawer]), 'Peningaskúffa');
-  $('btnCut').onclick = () => send(new Uint8Array([...CMD.lf, ...CMD.lf, ...CMD.cut]), 'Skera');
+  $('btnDrawer').onclick = () => send(new Uint8Array([...CMD.init, ...CMD.drawer]), 'drawer');
+  $('btnCut').onclick = () => send(new Uint8Array([...CMD.lf, ...CMD.lf, ...CMD.cut]), 'cut');
   $('btnDisconnect').onclick = async () => {
-    try { if (device) { await device.releaseInterface(ifaceNo); await device.close(); } } catch (e) { log(`Aftenging: ${e.message}`); }
-    device = null; epOut = null; ifaceNo = null; enableTests(false); setStatus('Ekki tengt.'); log('Aftengt.');
+    try { if (device) { await device.releaseInterface(ifaceNo); await device.close(); } } catch (e) { log(`disconnect: ${e.message}`); }
+    device = null; epOut = null; ifaceNo = null; enableTests(false); setStatus(L.notConnected); log('disconnected');
   };
-  if (navigator.usb) navigator.usb.addEventListener('disconnect', e => { if (device && e.device === device) { device = null; enableTests(false); setStatus('Prentarinn var aftengdur.', 'err'); log('Tækið aftengdist.'); } });
+  if (navigator.usb) navigator.usb.addEventListener('disconnect', e => { if (device && e.device === device) { device = null; enableTests(false); setStatus(L.unplugged, 'err'); log('device unplugged'); } });
 })();
 </script>
 </body>
