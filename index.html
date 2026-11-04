@@ -56,7 +56,11 @@
   <div id="support"></div>
 
   <h2 data-t="connectH"></h2>
-  <p data-t="connectP"></p>
+  <ol>
+    <li data-t="connect1"></li>
+    <li data-t="connect2"></li>
+    <li data-t="connect3"></li>
+  </ol>
   <div class="grid">
     <button class="primary" id="btnConnect"><strong data-t="bConnect"></strong><span data-t="bConnectS"></span></button>
     <button id="btnConnectAny"><strong data-t="bAny"></strong><span data-t="bAnyS"></span></button>
@@ -65,35 +69,44 @@
 
   <h2 data-t="testH"></h2>
   <p data-t="testP"></p>
-  <div class="row" style="margin-bottom:12px">
-    <label for="cp" data-t="cpLabel"></label>
-    <select id="cp">
-      <option value="32" selected>Windows-1252 (n=32)</option>
-      <option value="none" data-t="cpNone"></option>
-    </select>
-  </div>
   <div class="grid">
     <button id="btnText" disabled><strong data-t="bText"></strong><span data-t="bTextS"></span></button>
     <button id="btnReceipt" disabled><strong data-t="bReceipt"></strong><span data-t="bReceiptS"></span></button>
     <button id="btnTicket" disabled><strong data-t="bTicket"></strong><span data-t="bTicketS"></span></button>
     <button id="btnDrawer" disabled><strong data-t="bDrawer"></strong><span data-t="bDrawerS"></span></button>
     <button id="btnCut" disabled><strong data-t="bCut"></strong><span data-t="bCutS"></span></button>
-    <button id="btnDisconnect" disabled><strong data-t="bDisc"></strong><span data-t="bDiscS"></span></button>
   </div>
-
-  <h2 data-t="recordH"></h2>
+  <p style="margin-top:16px" data-t="checkP"></p>
   <ol>
-    <li data-t="record1"></li>
-    <li data-t="record2"></li>
-    <li data-t="record3"></li>
+    <li data-t="check1"></li>
+    <li data-t="check2"></li>
+    <li data-t="check3"></li>
   </ol>
+  <div class="row" style="margin-bottom:12px">
+    <label for="cp" data-t="cpLabel"></label>
+    <select id="cp">
+      <option value="32" selected data-t="cpA"></option>
+      <option value="none" data-t="cpB"></option>
+    </select>
+  </div>
 
   <h2 data-t="afterH"></h2>
   <ol>
     <li data-t="after1"></li>
     <li data-t="after2"></li>
     <li data-t="after3"></li>
+    <li data-t="after4"></li>
   </ol>
+  <div class="grid">
+    <button id="btnDisconnect" disabled><strong data-t="bDisc"></strong><span data-t="bDiscS"></span></button>
+  </div>
+
+  <h2 data-t="helpH"></h2>
+  <ul>
+    <li data-t="help1"></li>
+    <li data-t="help2"></li>
+    <li data-t="help3"></li>
+  </ul>
 
   <h2 data-t="logH"></h2>
   <div id="log"></div>
@@ -105,79 +118,95 @@
   const T = {
     is: {
       title: 'Prentpróf fyrir Kröst',
-      intro: 'Prófar hvort Chrome á spjaldtölvunni getur prentað kvittun og eldhúsmiða á mPOP-prentarann og opnað peningaskúffuna. Prófið tekur um tíu mínútur.',
+      intro: 'Á þessari síðu er prófað hvort spjaldtölvan getur prentað kvittanir og eldhúsmiða og opnað peningaskúffuna án Dineout. Prófið tekur um tíu mínútur. Ekkert er selt og ekkert vistað.',
       beforeH: 'Áður en byrjað er',
-      before1: 'Gerðu prófið utan opnunartíma. Á meðan prófað er prentar Dineout ekki.',
-      before2: 'Lokaðu Dineout-forritinu alveg: Stillingar → Forrit → Dineout → Þvinga lokun. Annars heldur Dineout prentaranum.',
-      before3: 'Hafðu prentarann tengdan spjaldtölvunni með USB-snúrunni og kveikt á honum.',
-      before4: 'Opnaðu þessa síðu í Chrome á spjaldtölvunni.',
-      connectH: '1. Tengjast prentaranum',
-      connectP: 'Ýttu á „Tengjast mPOP“ og veldu prentarann af listanum sem Chrome sýnir. Ef Android spyr hvort Chrome megi nota USB-tækið skaltu ýta á „Leyfa“, en ekki haka við að Chrome eigi alltaf að opna tækið.',
-      bConnect: 'Tengjast mPOP', bConnectS: 'Velja Star-prentara af lista',
-      bAny: 'Velja hvaða USB-tæki sem er', bAnyS: 'Ef prentarinn birtist ekki á fyrri listanum',
-      testH: '2. Prófa',
-      testP: 'Ýttu á hnappana einn í einu og bíddu eftir að hver miði prentist.',
-      cpLabel: 'Stafatafla:', cpNone: 'Engin stafataflaskipun',
-      bText: 'Prufutexti', bTextS: 'Íslenskir stafir, stórt og feitletrað letur',
-      bReceipt: 'Prufukvittun', bReceiptS: 'Snið kvittunar með VSK og tilvísun í reglugerð',
-      bTicket: 'Prufueldhúsmiði', bTicketS: 'Borð, tími og réttir í stóru letri, án verðs',
-      bDrawer: 'Opna peningaskúffu', bDrawerS: 'Sendir opnunarmerki á skúffuna',
-      bCut: 'Skera blað', bCutS: 'Fæðir og sker',
-      bDisc: 'Aftengja', bDiscS: 'Sleppir prentaranum',
-      recordH: 'Hvað á að skrá',
-      record1: 'Taktu mynd af hverjum miða sem prentast. Skoðaðu sérstaklega hvort íslensku stafirnir á prufutextanum prentast rétt.',
-      record2: 'Skráðu hvort peningaskúffan opnaðist og hvort blaðið var skorið.',
-      record3: 'Ef íslensku stafirnir prentast rangt skaltu velja „Engin stafataflaskipun“ og prenta prufutextann aftur.',
-      afterH: 'Eftir prófið',
-      after1: 'Ýttu á „Aftengja“ og lokaðu Chrome.',
-      after2: 'Opnaðu Dineout aftur og prentaðu einn miða þar til að staðfesta að Dineout nái sambandi við prentarann.',
-      after3: 'Taktu skjámynd af skránni hér fyrir neðan og sendu hana með myndunum.',
-      logH: 'Skrá',
+      before1: 'Gerðu prófið þegar staðurinn er lokaður. Kassinn getur ekki prentað á meðan.',
+      before2: 'Notaðu spjaldtölvuna við kassann, ekki símann þinn.',
+      before3: 'Lokaðu Dineout alveg: opnaðu Settings → Apps → Dineout og ýttu á Force stop.',
+      before4: 'Gakktu úr skugga um að kveikt sé á prentaranum og að USB-snúran úr honum sé tengd spjaldtölvunni.',
+      connectH: 'Skref 1: Tengjast prentaranum',
+      connect1: 'Ýttu á „Tengjast prentaranum“. Listi birtist. Veldu Star-prentarann (hann gæti heitið mPOP eða Star) og ýttu á Connect.',
+      connect2: 'Ef spjaldtölvan spyr hvort Chrome megi nota tækið skaltu ýta á OK eða Allow. Ekki haka við að Chrome eigi alltaf að opnast.',
+      connect3: 'Þegar reiturinn fyrir neðan hnappana verður grænn og segir „Tengt“ ferðu í skref 2.',
+      bConnect: 'Tengjast prentaranum', bConnectS: 'Sýnir lista yfir prentara',
+      bAny: 'Sýna öll USB-tæki', bAnyS: 'Aðeins ef prentarinn er ekki á fyrri listanum',
+      testH: 'Skref 2: Prenta prófin',
+      testP: 'Ýttu einu sinni á hvern hnapp og bíddu þar til miðinn kemur út. Taktu mynd af hverjum miða.',
+      bText: 'Prufutexti', bTextS: 'Íslenskir stafir og stórt letur',
+      bReceipt: 'Prufukvittun', bReceiptS: 'Sýnishorn af kvittun, engin sala',
+      bTicket: 'Prufueldhúsmiði', bTicketS: 'Sýnishorn af eldhúsmiða, engin pöntun',
+      bDrawer: 'Opna peningaskúffu', bDrawerS: 'Skúffan á að opnast. Lokaðu henni aftur.',
+      bCut: 'Skera blað', bCutS: 'Fæðir smá blað og sker',
+      checkP: 'Athugaðu þetta:',
+      check1: 'Eru íslensku stafirnir (á, ð, þ, æ, ö) réttir á prufutextanum? Ef ekki skaltu breyta „Stafastillingu“ hér fyrir neðan í B og prenta prufutextann aftur.',
+      check2: 'Opnaðist peningaskúffan?',
+      check3: 'Var blaðið skorið eftir hvern miða?',
+      cpLabel: 'Stafastilling:', cpA: 'A (prófa fyrst)', cpB: 'B (aðeins ef stafirnir eru rangir)',
+      afterH: 'Skref 3: Þegar prófinu er lokið',
+      after1: 'Taktu skjámynd af skránni neðst á síðunni (ýttu á rofann og hljóð niður samtímis).',
+      after2: 'Ýttu á „Aftengja“ hér fyrir neðan og lokaðu Chrome.',
+      after3: 'Opnaðu Dineout og prentaðu kvittun eða miða eins og venjulega, til að athuga að Dineout geti enn prentað.',
+      after4: 'Sendu skjámyndina og myndirnar af miðunum þeim sem sendi þér þessa slóð.',
+      bDisc: 'Aftengja', bDiscS: 'Sleppir prentaranum svo Dineout geti notað hann',
+      helpH: 'Ef eitthvað fer úrskeiðis',
+      help1: 'Listinn er tómur eða tengingin mistekst: athugaðu að Dineout hafi verið stöðvað (Force stop). Taktu svo USB-snúru prentarans úr spjaldtölvunni, settu hana aftur í og reyndu aftur. Ef spjaldtölvan spyr hvaða forrit eigi að opnast skaltu ýta á Cancel.',
+      help2: 'Ekkert prentast þó að það standi „Tengt“: taktu skjámynd af skránni og hættu prófinu.',
+      help3: 'Dineout getur ekki prentað eftir prófið: taktu USB-snúruna úr og settu hana aftur í. Ef spjaldtölvan spyr hvaða forrit eigi að nota skaltu velja Dineout. Ef það dugar ekki skaltu endurræsa spjaldtölvuna.',
+      logH: 'Skrá (fyrir skjámyndina)',
       notConnected: 'Ekki tengt.',
-      connected: n => `Tengt: ${n}`,
-      connectFail: (m, busy) => `Tenging mistókst: ${m}.` + (busy ? ' Líklega heldur annað forrit (t.d. Dineout) prentaranum. Lokaðu því alveg og reyndu aftur.' : ''),
-      sendFail: m => `Sending mistókst: ${m}`,
-      unplugged: 'Prentarinn var aftengdur.',
-      noHttps: 'Síðan er ekki opnuð yfir HTTPS. WebUSB virkar aðeins á öruggri slóð.',
-      noUsb: 'Þessi vafri styður ekki WebUSB. Notaðu Chrome á spjaldtölvunni.',
+      connected: n => `Tengt: ${n}. Farðu í skref 2.`,
+      connectFail: busy => busy ? 'Tengingin mistókst. Líklega er Dineout enn í gangi. Stöðvaðu það með Force stop og reyndu aftur.' : 'Tengingin mistókst. Sjá „Ef eitthvað fer úrskeiðis“ neðst á síðunni.',
+      cancelled: 'Enginn prentari var valinn. Ýttu aftur á „Tengjast prentaranum“.',
+      sendFail: 'Prentun mistókst. Taktu skjámynd af skránni neðst á síðunni.',
+      unplugged: 'Prentarinn aftengdist.',
+      noHttps: 'Síðan er ekki opnuð á öruggri slóð (https). Opnaðu slóðina sem þú fékkst senda.',
+      noUsb: 'Þessi vafri getur ekki tengst prentaranum. Opnaðu síðuna í Chrome á spjaldtölvunni.',
     },
     en: {
       title: 'Kröst print test',
-      intro: 'Checks whether Chrome on the tablet can print a receipt and a kitchen ticket on the mPOP printer and open the cash drawer. The test takes about ten minutes.',
+      intro: 'This page checks whether the tablet can print receipts and kitchen tickets and open the cash drawer without the Dineout app. It takes about ten minutes. Nothing is sold and nothing is saved.',
       beforeH: 'Before you start',
-      before1: 'Run the test outside opening hours. Dineout cannot print while the test is running.',
-      before2: 'Close the Dineout app completely: Settings → Apps → Dineout → Force stop. Otherwise Dineout keeps hold of the printer.',
-      before3: 'Keep the printer connected to the tablet with the USB cable and switched on.',
-      before4: 'Open this page in Chrome on the tablet.',
-      connectH: '1. Connect to the printer',
-      connectP: 'Tap “Connect to mPOP” and choose the printer from the list Chrome shows. If Android asks whether Chrome may use the USB device, tap “Allow”, but do not tick the box that makes Chrome open the device by default.',
-      bConnect: 'Connect to mPOP', bConnectS: 'Choose a Star printer from the list',
-      bAny: 'Choose any USB device', bAnyS: 'If the printer does not appear in the first list',
-      testH: '2. Test',
-      testP: 'Tap the buttons one at a time and wait for each ticket to print.',
-      cpLabel: 'Code page:', cpNone: 'No code page command',
-      bText: 'Test text', bTextS: 'Icelandic letters, large and bold text',
-      bReceipt: 'Test receipt', bReceiptS: 'Receipt layout with VAT and the regulation reference',
-      bTicket: 'Test kitchen ticket', bTicketS: 'Table, time and dishes in large text, no prices',
-      bDrawer: 'Open cash drawer', bDrawerS: 'Sends the open signal to the drawer',
-      bCut: 'Cut paper', bCutS: 'Feeds and cuts',
-      bDisc: 'Disconnect', bDiscS: 'Releases the printer',
-      recordH: 'What to record',
-      record1: 'Take a photo of every ticket that prints. Check in particular whether the Icelandic letters on the test text print correctly.',
-      record2: 'Note whether the cash drawer opened and whether the paper was cut.',
-      record3: 'If the Icelandic letters print wrongly, choose “No code page command” and print the test text again.',
-      afterH: 'After the test',
-      after1: 'Tap “Disconnect” and close Chrome.',
-      after2: 'Open Dineout again and print one ticket there to confirm that Dineout can reach the printer.',
-      after3: 'Take a screenshot of the log below and send it with the photos.',
-      logH: 'Log',
+      before1: 'Do the test when the restaurant is closed. The till cannot print while the test is running.',
+      before2: 'Use the till tablet, not your phone.',
+      before3: 'Close Dineout completely: open Settings → Apps → Dineout and tap Force stop.',
+      before4: 'Check that the printer is switched on and that its USB cable is plugged into the tablet.',
+      connectH: 'Step 1: Connect to the printer',
+      connect1: 'Tap “Connect to the printer”. A list appears. Choose the Star printer (it may be called mPOP or Star) and tap Connect.',
+      connect2: 'If the tablet asks whether Chrome may use the device, tap OK or Allow. Do not tick the box that makes Chrome always open.',
+      connect3: 'When the box under the buttons turns green and says “Connected”, go to step 2.',
+      bConnect: 'Connect to the printer', bConnectS: 'Shows a list of printers',
+      bAny: 'Show all USB devices', bAnyS: 'Only if the printer is not in the first list',
+      testH: 'Step 2: Print the tests',
+      testP: 'Tap each button once and wait until the paper comes out. Take a photo of each printout.',
+      bText: 'Test text', bTextS: 'Icelandic letters and large text',
+      bReceipt: 'Test receipt', bReceiptS: 'A sample receipt, not a real sale',
+      bTicket: 'Test kitchen ticket', bTicketS: 'A sample kitchen ticket, not a real order',
+      bDrawer: 'Open cash drawer', bDrawerS: 'The drawer should open. Close it again.',
+      bCut: 'Cut paper', bCutS: 'Feeds a little paper and cuts it',
+      checkP: 'Check the following:',
+      check1: 'Are the Icelandic letters (á, ð, þ, æ, ö) correct on the test text? If not, change “Letter setting” below to B and print the test text again.',
+      check2: 'Did the cash drawer open?',
+      check3: 'Was the paper cut after each printout?',
+      cpLabel: 'Letter setting:', cpA: 'A (try first)', cpB: 'B (only if the letters are wrong)',
+      afterH: 'Step 3: When you are finished',
+      after1: 'Take a screenshot of the log at the bottom of this page (press the power button and volume down at the same time).',
+      after2: 'Tap “Disconnect” below and close Chrome.',
+      after3: 'Open Dineout and print a receipt or ticket the way you normally do, to check that Dineout can still print.',
+      after4: 'Send the screenshot and the photos of the printouts to the person who sent you this link.',
+      bDisc: 'Disconnect', bDiscS: 'Releases the printer so Dineout can use it',
+      helpH: 'If something goes wrong',
+      help1: 'The list is empty or connecting fails: check that Dineout has been force-stopped. Then unplug the printer’s USB cable from the tablet, plug it back in and try again. If the tablet asks which app to open, tap Cancel.',
+      help2: 'Nothing prints although it says “Connected”: take a screenshot of the log and stop the test.',
+      help3: 'Dineout cannot print after the test: unplug the USB cable and plug it back in. If the tablet asks which app to use, choose Dineout. If that does not help, restart the tablet.',
+      logH: 'Log (for the screenshot)',
       notConnected: 'Not connected.',
-      connected: n => `Connected: ${n}`,
-      connectFail: (m, busy) => `Connection failed: ${m}.` + (busy ? ' Another app (for example Dineout) is probably holding the printer. Close it completely and try again.' : ''),
-      sendFail: m => `Sending failed: ${m}`,
+      connected: n => `Connected: ${n}. Go to step 2.`,
+      connectFail: busy => busy ? 'Could not connect. Dineout is probably still running. Force-stop it and try again.' : 'Could not connect. See “If something goes wrong” at the bottom of the page.',
+      cancelled: 'No printer was chosen. Tap “Connect to the printer” again.',
+      sendFail: 'Printing failed. Take a screenshot of the log at the bottom of the page.',
       unplugged: 'The printer was disconnected.',
-      noHttps: 'This page is not open over HTTPS. WebUSB only works on a secure address.',
-      noUsb: 'This browser does not support WebUSB. Use Chrome on the tablet.',
+      noHttps: 'This page is not open on a secure (https) address. Open the link you were sent.',
+      noUsb: 'This browser cannot connect to the printer. Open the page in Chrome on the tablet.',
     },
   };
   const qs = new URLSearchParams(location.search).get('lang');
@@ -267,7 +296,8 @@
       enableTests(true);
     } catch (e) {
       const busy = /claim|busy|access|in use/i.test(e.message);
-      setStatus(L.connectFail(e.message, busy), 'err');
+      const cancelled = e.name === 'NotFoundError';
+      setStatus(cancelled ? L.cancelled : L.connectFail(busy), 'err');
       log(`ERROR connect: ${e.name}: ${e.message}`);
       device = null; epOut = null; ifaceNo = null;
     }
@@ -280,7 +310,7 @@
       log(`${label}: ${r.bytesWritten} bytes (${r.status})`);
     } catch (e) {
       log(`ERROR ${label}: ${e.name}: ${e.message}`);
-      setStatus(L.sendFail(e.message), 'err');
+      setStatus(L.sendFail, 'err');
     }
   }
 
@@ -323,14 +353,15 @@
     d.line(pairLine('Greitt með posa', kr(total)));
     d.line(rule());
     d.raw(CMD.align(1)).line('Reikningur þessi á uppruna sinn').line('í rafrænu bókhaldskerfi').line('skv. reglugerð nr. 505/2013.');
-    d.line('PRUFA – EKKI GILDUR REIKNINGUR');
+    d.raw(CMD.boldOn).line('PRUFA / TEST').raw(CMD.boldOff).line('EKKI GILDUR REIKNINGUR').line('NOT A VALID RECEIPT');
     d.line(''); d.line(''); d.raw(CMD.cut);
     return send(d.bytes(), 'receipt');
   }
 
   function testTicket() {
     const d = new Doc();
-    d.raw(CMD.align(1)).raw(CMD.size(1,1)).line('Borðað á staðnum').raw(CMD.size(0,0));
+    d.raw(CMD.align(1)).raw(CMD.boldOn).raw(CMD.size(1,1)).line('PRUFA / TEST').line('EKKI ELDA').line('DO NOT COOK').raw(CMD.size(0,0)).raw(CMD.boldOff).line(rule());
+    d.raw(CMD.size(1,1)).line('Borðað á staðnum').raw(CMD.size(0,0));
     d.raw(CMD.align(0)).line('Borð');
     d.raw(CMD.boldOn).raw(CMD.size(1,1)).line('Bíper 2').raw(CMD.size(0,0)).raw(CMD.boldOff);
     d.line(stamp());
@@ -339,7 +370,7 @@
     d.raw(CMD.size(1,1)).line('1x Kjúklinga-').line('   salat').raw(CMD.size(0,0)).line('   auka kjúklingur');
     d.raw(CMD.size(1,1)).line('1x Krösti börger').raw(CMD.size(0,0)).line('   ATH: án lauks');
     d.line('');
-    d.raw(CMD.align(1)).raw(CMD.size(1,1)).line('Bíper 2').raw(CMD.size(0,0)).line('PRUFA');
+    d.raw(CMD.align(1)).raw(CMD.size(1,1)).line('Bíper 2').line('PRUFA / TEST').raw(CMD.size(0,0));
     d.line(''); d.line(''); d.raw(CMD.cut);
     return send(d.bytes(), 'kitchen ticket');
   }
